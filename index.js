@@ -27,6 +27,15 @@ async function run(){
             const result = await serviceCollection.insertOne(query);
             res.send(result);
         });
+
+        // read services API
+        // loading server data for client site
+        app.get('/services', async(req, res) => {
+            const query = {}
+            const cursor = serviceCollection.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+        })
     }
     finally{
 
