@@ -38,6 +38,7 @@ async function run(){
             res.send(services);
         });
 
+        // read services API
         // get used for finding server data
         // load individual or specific id for services 
         app.get('/services/:id', async(req, res) => {
@@ -56,7 +57,14 @@ async function run(){
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
             res.send(services);
-        })
+        });
+
+        // create reviews API
+        app.post('/reviews', async(req, res) => {
+            const query = req.body;
+            const result = await reviewCollection.insertOne(query);
+            res.send(result);
+        });
     }
     finally{
 
