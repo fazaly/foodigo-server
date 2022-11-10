@@ -97,38 +97,39 @@ async function run(){
 
         // read data
         app.get('/reviews', async(req, res) => {
-
-            // // json web token
-            // console.log(req.headers.authorization);
-            // const decoded = req.decoded;
-            // console.log('inside reviews API', decoded);
-            // if(decoded.email !== req.query.email){
-            //     res.status(403).send({message: 'unauthorized access'})
-            // }
-
-            // // console.log(req.query.email);
-            // let query = {};
-            // // loading data by using query parameters
-            // if(req.query.email){
-            //     query = {
-            //         email: req.query.email
-            //     }
-            // }
             const query = {}
             const cursor = reviewCollection.find(query);
             const reviews = await cursor.toArray();
             res.send(reviews);
         });
 
-        app.get('/review', async (req, res) => {
-            const query = {}
+        app.get('/review', verifyJWT, async (req, res) => {
+
+            // json web token
+            console.log(req.headers.authorization);
+            const decoded = req.decoded;
+            console.log('inside reviews API', decoded);
+            if(decoded.email !== req.query.email){
+                res.status(403).send({message: 'unauthorized access'})
+            }
+
+            // console.log(req.query.email);
+            let query = {};
+            // loading data by using query parameters
+            if(req.query.email){
+                query = {
+                    email: req.query.email
+                }
+            }
+
+            // const query = {}
             const cursor = reviewCollection.find(query)
             const review = await cursor.toArray()
             res.send(review)
         });
 
         // delete single data
-        app.delete('/review/:id', async (req, res) => {
+        app.delete('/review/:id', verifyJWT, async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const remain = await reviewCollection.deleteOne(query)
@@ -136,7 +137,7 @@ async function run(){
         });
 
         // Update data
-        app.get("/myreviews/:id", async (req, res) => {
+        app.get("/myreviews/:id", verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await reviewCollection.findOne(query)
@@ -144,7 +145,7 @@ async function run(){
         });
 
         // update 
-        app.patch('/review/:id', async (req, res) => {
+        app.patch('/review/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = req.body;
             const filter = { _id: ObjectId(id) }
