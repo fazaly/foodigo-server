@@ -129,7 +129,7 @@ async function run(){
         });
 
         // delete single data
-        app.delete('/review/:id', verifyJWT, async (req, res) => {
+        app.delete('/review/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const remain = await reviewCollection.deleteOne(query)
@@ -137,7 +137,7 @@ async function run(){
         });
 
         // Update data
-        app.get("/myreviews/:id", verifyJWT, async (req, res) => {
+        app.get("/myreviews/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await reviewCollection.findOne(query)
